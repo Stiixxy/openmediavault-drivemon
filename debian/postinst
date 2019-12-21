@@ -16,6 +16,11 @@ case "$1" in
 
         # Initialize and migrate configuration database.
         echo "Updating configuration database ..."
+
+        omv-confdbadm create "conf.service.example"
+        if [ -n "$2" ]; then
+            omv-confdbadm migrate "conf.service.example" "${2}"
+        fi
     ;;
 
 abort-upgrade|abort-remove|abort-deconfigure)

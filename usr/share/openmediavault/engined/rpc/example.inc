@@ -55,6 +55,13 @@ use OMV\Rpc\Rpc;
  */
 class OMVRpcServiceExample extends ServiceAbstract
 {
+	private $dataModelPath = 'conf.service.example';
+	
+	public function __construct(Database $database = null, Dispatcher $dispatcher = null){
+        $this->database = $database ?: Database::getInstance();
+        $this->dispatcher = $dispatcher ?: Dispatcher::getInstance();
+    }
+
     /**
      * Get the name of the RPC service
      *
@@ -78,7 +85,17 @@ class OMVRpcServiceExample extends ServiceAbstract
 	}
 	public function getSettings($params, $context)
 	{
-		// Not implemented.
+		$this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+		);
+		
+		$settings=$this->database->getAssoc($this->dataModelPath);
+
+        $settings["enable"] = boolval($settings["enable"]);
+        $settings["max_value"] = intval($settings["max_value"]);
+
+        return $settings;
 	}
 	public function setSettings($params, $context)
 	{

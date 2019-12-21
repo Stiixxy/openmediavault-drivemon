@@ -9,7 +9,6 @@ Homepage: http://omv-extras.org/
 
 Package: openmediavault-example
 Architecture: all
-Depends: omvextras-common,
-         openmediavault (>= 4.1.23),
+Depends: openmediavault (>= 4.1.23),
          ${misc:Depends},
 Description: openmediavault test plugin

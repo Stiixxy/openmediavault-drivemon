@@ -1,0 +1,17 @@
+{
+    "type": "config",
+    "title": "example",
+    "id": "conf.service.example",
+    "queryinfo": {
+        "xpath": "/config/services/example",
+        "iterable": false
+    },
+    "properties": {
+        "enable": {
+            "type": "boolean"
+        },
+        "max_value": {
+            "type": "integer"
+        }
+    }
+}
