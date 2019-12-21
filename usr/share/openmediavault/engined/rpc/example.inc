@@ -60,6 +60,17 @@ class OMVRpcServiceExample extends ServiceAbstract
 	public function __construct(Database $database = null, Dispatcher $dispatcher = null){
         $this->database = $database ?: Database::getInstance();
         $this->dispatcher = $dispatcher ?: Dispatcher::getInstance();
+	}
+	
+	/**
+     * Get the main event message path of the service. This is a helper
+     * function to avoid "magic numbers".
+     *
+     * @return string
+     */
+    private function _getEventMessagePath()
+    {
+        return "org.openmediavault.services.example";
     }
 
     /**
@@ -99,7 +110,41 @@ class OMVRpcServiceExample extends ServiceAbstract
 	}
 	public function setSettings($params, $context)
 	{
-		// Not implemented.
+		$this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+		);
+		$this->validateMethodParams(
+            $params,
+                '{' .
+				'    "type": "object",' .
+				'    "properties": {' .
+				'        "enable": {' .
+				'            "type": "boolean"' .
+				'        },' .
+				'        "max_value": {' .
+				'            "type": "integer"' .
+				'        }' .
+				'    }' .
+				'}' 				
+		);
+		
+		$object = array(
+            "enable" => array_boolval($params, "enable"),
+            "max_value" => intval($params['max_value'])
+        );
+
+		$config = new ConfigObject($this->dataModelPath);
+        $config->setAssoc($object);
+        $this->database->set($config);
+
+        $this->dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            $this->_getEventMessagePath(),
+            $object
+        );
+
+        return $object;
 	}
 
 
