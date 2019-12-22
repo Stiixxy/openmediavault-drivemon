@@ -94,7 +94,30 @@ class OMVRpcServiceExample extends ServiceAbstract
 		$this->registerMethod('getSettings');
 		$this->registerMethod('setSettings');
 		$this->registerMethod('getDashboard');
+		$this->registerMethod('exampleCall');
     }
+
+    
+	public function exampleCall($params, $context)
+	{
+		$this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+        
+        $object = array(
+            "checked" => boolval($params["checked"])
+        );
+
+        $file = fopen("/tmp/test.txt","a");
+        if($object['checked']){
+            fwrite($file, 'Cats chase mice');
+        }else{
+            fwrite($file, 'Nice chase cat');
+        }
+        fclose($file);
+    }
+
     
 	public function getDashboard($params, $context)
 	{
