@@ -93,7 +93,23 @@ class OMVRpcServiceExample extends ServiceAbstract
 	{
 		$this->registerMethod('getSettings');
 		$this->registerMethod('setSettings');
-	}
+		$this->registerMethod('getDashboard');
+    }
+    
+	public function getDashboard($params, $context)
+	{
+		$this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+		);
+		
+		$settings=array();
+
+        $settings["set"] = true;
+
+        return $settings;
+    }
+
 	public function getSettings($params, $context)
 	{
 		$this->validateMethodContext(
@@ -107,7 +123,8 @@ class OMVRpcServiceExample extends ServiceAbstract
         $settings["max_value"] = intval($settings["max_value"]);
 
         return $settings;
-	}
+    }
+    
 	public function setSettings($params, $context)
 	{
 		$this->validateMethodContext(

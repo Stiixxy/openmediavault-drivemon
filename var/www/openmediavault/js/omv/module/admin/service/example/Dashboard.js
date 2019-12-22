@@ -1,14 +1,13 @@
-Ext.define('OMV.module.admin.service.example.Settings', {
+Ext.define('OMV.module.admin.service.example.Dashboard', {
     extend: 'OMV.workspace.form.Panel',
     
     // This path tells which RPC module and methods this panel will call to get 
     // and fetch its form values.
     rpcService: 'Example',
-    rpcGetMethod: 'getSettings',
-    rpcSetMethod: 'setSettings',
+    rpcGetMethod: 'getDashboard',
 
     initComponent : function() {
-        this.on("load", function() {
+        this.on("afterrender", function() {
             var me = this;
             var parent = this.up("tabpanel");
 
@@ -21,13 +20,8 @@ Ext.define('OMV.module.admin.service.example.Settings', {
             var checked = examplePanel.findField("enable").checked
 
             if(dashboardPanel){
-                if(checked){
-                    dashboardPanel.tab.show();
-                    dashboardPanel.enable();
-                    parent.setActiveTab(dashboardPanel);
-                }else{
-                    dashboardPanel.disable();
-                    dashboardPanel.tab.hide();
+                if(!checked){
+                    parent.setActiveTab(examplePanel);
                 }
             }
 
@@ -53,38 +47,19 @@ Ext.define('OMV.module.admin.service.example.Settings', {
                 xtype: 'checkbox',
                 // The name option is sent together with is value to RPC
                 // and is also used when fetching from the RPC.
-                name: 'enable',
-                fieldLabel: _('Enable'),
+                name: 'set',
+                fieldLabel: _('Set'),
                 // checked sets the default value of a checkbox.
                 checked: false
-            },
-            {
-                xtype: 'numberfield',
-                name: 'max_value',
-                fieldLabel: _('Max value'),
-                minValue: 0,
-                maxValue: 100,
-                allowDecimals: false,
-                allowBlank: true
             }]
         }];
     }
 });
 
-// Register a panel into the GUI.
-//
-// path: 
-//     We want to add the panel in our example node. 
-//     The node was configured with the path /service and the id example.
-//     The path is therefore /service/example.
-//
-// className: 
-//     The panel which should be registered and added (refers to 
-//     the class name).
 OMV.WorkspaceManager.registerPanel({
-    id: "settings",
+    id: "dashboard",
     path: "/service/example",
-    text: _("Example"),
-    position: 100,
-    className: "OMV.module.admin.service.example.Settings"
+    text: _("Dashboard"),
+    position: 10,
+    className: "OMV.module.admin.service.example.Dashboard"
 });
