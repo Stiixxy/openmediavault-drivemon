@@ -16,7 +16,7 @@ Ext.define('OMV.module.admin.service.example.Dashboard', {
             }
 
             var dashboardPanel = parent.down("panel[title=" + _("Dashboard") + "]");
-            var examplePanel = parent.down("panel[title=" + _("Example") + "]");
+            var examplePanel = parent.down("panel[title=" + _("Settings") + "]");
             var checked = examplePanel.findField("enable").checked
 
             if (dashboardPanel) {

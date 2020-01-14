@@ -17,7 +17,7 @@ Ext.define('OMV.module.admin.service.example.Settings', {
             }
 
             var dashboardPanel = parent.down("panel[title=" + _("Dashboard") + "]");
-            var examplePanel = parent.down("panel[title=" + _("Example") + "]");
+            var examplePanel = parent.down("panel[title=" + _("Settings") + "]");
             var checked = examplePanel.findField("enable").checked
 
             if(dashboardPanel){
@@ -59,13 +59,9 @@ Ext.define('OMV.module.admin.service.example.Settings', {
                 checked: false
             },
             {
-                xtype: 'numberfield',
-                name: 'max_value',
-                fieldLabel: _('Max value'),
-                minValue: 0,
-                maxValue: 100,
-                allowDecimals: false,
-                allowBlank: true
+                xtype: 'textfield',
+                name: 'drives',
+                fieldLabel: _('Drives'),
             }]
         }];
     }
@@ -84,7 +80,7 @@ Ext.define('OMV.module.admin.service.example.Settings', {
 OMV.WorkspaceManager.registerPanel({
     id: "settings",
     path: "/service/example",
-    text: _("Example"),
+    text: _("Settings"),
     position: 100,
     className: "OMV.module.admin.service.example.Settings"
 });
