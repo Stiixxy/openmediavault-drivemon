@@ -1,17 +1,17 @@
 {
     "type": "config",
-    "title": "example",
-    "id": "conf.service.example",
+    "title": "drivemon",
+    "id": "conf.service.drivemon",
     "queryinfo": {
-        "xpath": "/config/services/example",
+        "xpath": "/config/services/drivemon",
         "iterable": false
     },
     "properties": {
         "enable": {
             "type": "boolean"
         },
-        "max_value": {
-            "type": "integer"
+        "drives": {
+            "type": "string"
         }
     }
 }

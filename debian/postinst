@@ -17,9 +17,9 @@ case "$1" in
         # Initialize and migrate configuration database.
         echo "Updating configuration database ..."
 
-        omv-confdbadm create "conf.service.example"
+        omv-confdbadm create "conf.service.drivemon"
         if [ -n "$2" ]; then
-            omv-confdbadm migrate "conf.service.example" "${2}"
+            omv-confdbadm migrate "conf.service.drivemon" "${2}"
         fi
     ;;
 

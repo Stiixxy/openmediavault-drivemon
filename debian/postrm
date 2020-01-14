@@ -5,7 +5,7 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-CONFIG="/config/services/example"
+CONFIG="/config/services/drivemon"
 
 remove_action() {
     # Activate trigger to purge cached files.

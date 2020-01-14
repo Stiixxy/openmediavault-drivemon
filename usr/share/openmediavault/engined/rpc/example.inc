@@ -55,7 +55,7 @@ use OMV\Rpc\Rpc;
  */
 class OMVRpcServiceExample extends ServiceAbstract
 {
-	private $dataModelPath = 'conf.service.example';
+	private $dataModelPath = 'conf.service.drivemon';
 	
 	public function __construct(Database $database = null, Dispatcher $dispatcher = null){
         $this->database = $database ?: Database::getInstance();
@@ -94,11 +94,10 @@ class OMVRpcServiceExample extends ServiceAbstract
 		$this->registerMethod('getSettings');
 		$this->registerMethod('setSettings');
 		$this->registerMethod('getDashboard');
-		$this->registerMethod('exampleCall');
+		$this->registerMethod('getDriveStatus');
     }
 
-    
-	public function exampleCall($params, $context)
+    public function getDriveStatus($params, $context)
 	{
 		$this->validateMethodContext(
             $context,
@@ -106,18 +105,17 @@ class OMVRpcServiceExample extends ServiceAbstract
         );
         
         $object = array(
-            "checked" => boolval($params["checked"])
+            "drives" => $params["drives"]
         );
 
-        $file = fopen("/tmp/test.txt","a");
-        if($object['checked']){
-            fwrite($file, 'Cats chase mice');
-        }else{
-            fwrite($file, 'Nice chase cat');
-        }
-        fclose($file);
-    }
+        $output = shell_exec("hdparm -C " . $object["drives"]);
 
+        $result = array(
+            "output" => $output
+        );
+
+        return $result;
+    }
     
 	public function getDashboard($params, $context)
 	{
@@ -143,7 +141,7 @@ class OMVRpcServiceExample extends ServiceAbstract
 		$settings=$this->database->getAssoc($this->dataModelPath);
 
         $settings["enable"] = boolval($settings["enable"]);
-        $settings["max_value"] = intval($settings["max_value"]);
+        $settings["drives"] = $settings["drives"];
 
         return $settings;
     }
@@ -162,8 +160,8 @@ class OMVRpcServiceExample extends ServiceAbstract
 				'        "enable": {' .
 				'            "type": "boolean"' .
 				'        },' .
-				'        "max_value": {' .
-				'            "type": "integer"' .
+				'        "drives": {' .
+				'            "type": "string"' .
 				'        }' .
 				'    }' .
 				'}' 				
@@ -171,7 +169,7 @@ class OMVRpcServiceExample extends ServiceAbstract
 		
 		$object = array(
             "enable" => array_boolval($params, "enable"),
-            "max_value" => intval($params['max_value'])
+            "drives" => $params['drives']
         );
 
 		$config = new ConfigObject($this->dataModelPath);

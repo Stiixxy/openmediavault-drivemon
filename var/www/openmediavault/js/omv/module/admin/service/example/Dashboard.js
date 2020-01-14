@@ -40,24 +40,23 @@ Ext.define('OMV.module.admin.service.example.Dashboard', {
             return;
         }
 
-        var dashPanel = parent.down("panel[title=" + _("Dashboard") + "]");
-        var checked = dashPanel.findField("set").checked
+        var dashPanel = parent.down("panel[title=" + _("Settings") + "]");
+        var drives = dashPanel.findField("drives").rawValue;
+        console.log(drives);
 
         OMV.Rpc.request({
             scope: me,
-            callback: me.onCreateCallback,
+            callback: function(id, succcess, response){
+                console.log("got response from RPC", id, succcess, response);
+            },
             rpcData: {
                 service: "Example",
-                method: "exampleCall",
+                method: "getDriveStatus",
                 params: {
-                    checked: checked
+                    drives: drives
                 }
             }
         });
-    },
-
-    onCreateCallback: function() {
-        console.log("got response from RPC");
     },
 
     // getFormItems is a method which is automatically called in the 

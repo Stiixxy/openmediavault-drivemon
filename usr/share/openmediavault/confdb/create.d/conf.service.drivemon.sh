@@ -23,15 +23,15 @@ set -e
 
 . /usr/share/openmediavault/scripts/helper-functions
 
-SERVICE_XPATH_NAME="example"
+SERVICE_XPATH_NAME="drivemon"
 SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 
 # Setup initial OMV configuration
-if ! omv_config_exists "/config/services/example"; then
+if ! omv_config_exists "/config/services/drivemon"; then
     echo "Initialize configuration"
     omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
     omv_config_add_key "${SERVICE_XPATH}" "enable" "0"
-    omv_config_add_key "${SERVICE_XPATH}" "drives" ""
+    omv_config_add_key "${SERVICE_XPATH}" "drives" "/dev/sda"
 fi
 
 exit 0
