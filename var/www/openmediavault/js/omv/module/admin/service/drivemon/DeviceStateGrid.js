@@ -16,7 +16,7 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
     ],
 
     stateful: true,
-    stateId: "a458e082-8422-4564-a679-a47d9d001d0f",
+    stateId: "b06cd0b8-39f7-11ea-a137-2e728ce88125",
 
     defaults: {
         flex: 1
@@ -64,8 +64,79 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
             })
         });
         me.callParent(arguments);
+    },
+
+    getTopToolbarItems: function(c) {
+        var me = this;
+        return [{
+            id: me.getId() + "-shutdown",
+            xtype: "button",
+            text: _("Shutdown"),
+            icon: "images/shutdown.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: true,
+            handler: Ext.Function.bind(me.onShutdownButton, me, [ me ]),
+            scope: me
+        },
+        ]
+    },
+
+    onShutdownButton: function() {
+        var me = this;
+        var sm = me.getSelectionModel();
+        var selRecords = sm.getSelection();
+        var driveList = "";
+        for(i = 0; i < selRecords.length; i++) {
+            if(i === 0) {
+                driveList = selRecords[i].get("name");
+            } else {
+                driveList = driveList + " " + selRecords[i].get("name");
+            }
+        }
+
+        OMV.Rpc.request({
+            scope: me,
+            callback: function(id, succcess){
+                if(succcess){
+                    Ext.getCmp("deviceStateGrid").doReload();
+                }
+            },
+            rpcData: {
+                service: "Drivemon",
+                method: "shutdownDrive",
+                params: {
+                    drivelist: driveList
+                }
+            }
+        });
+    },
+
+    onSelectionChange: function(model, records) {
+        var me = this;
+        
+        var tbarBtnName = [ "shutdown" ];
+        var tbarBtnDisabled = {
+            "shutdown": true,
+        };
+
+        // Enable/disable buttons depending on the number of selected rows.
+        if(records.length > 0) {
+            tbarBtnDisabled["shutdown"] = false;
+        }
+
+        Ext.Array.each(tbarBtnName, function(name) {
+            var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
+            if(!Ext.isEmpty(tbarBtnCtrl)) {
+                if(true == tbarBtnDisabled[name]) {
+                    tbarBtnCtrl.disable();
+                } else {
+                    tbarBtnCtrl.enable();
+                }
+            }
+        });
     }
 });
+
 
 OMV.WorkspaceManager.registerPanel({
     id: "driveState",

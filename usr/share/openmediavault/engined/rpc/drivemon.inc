@@ -94,6 +94,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
 		$this->registerMethod('getSettings');
 		$this->registerMethod('setSettings');
 		$this->registerMethod('getDriveStatus');
+		$this->registerMethod('shutdownDrive');
     }
 
     public function getDriveStatus($params, $context)
@@ -125,6 +126,19 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         }
 
         return $result;
+    }
+
+    public function shutdownDrive($params, $context){
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+        
+        $object = array(
+            "drivelist" => $params['drivelist']
+        );
+
+        shell_exec("hdparm -y " . $object["drivelist"]);
     }
     
 	public function getSettings($params, $context)
