@@ -27,10 +27,8 @@ class Plugin(openmediavault.mkrrdgraph.IPlugin):
         # http://paletton.com/#uid=33r0-0kwi++bu++hX++++rd++kX
         config.update(
             {
-                'title_load': 'Drive state',
-                'color_load_shortterm': '#ffbf00',  # yellow
-                'color_load_midterm': '#0bb6ff',  # blue
-                'color_load_longterm': '#ff1300',  # red
+                'title_drive': 'Drive state',
+                'config_blue': '#0bb6ff',  # blue
             }
         )
         args = []
@@ -39,18 +37,14 @@ class Plugin(openmediavault.mkrrdgraph.IPlugin):
         args.append('{image_dir}/drivestate-{period}.png'.format(**config))
         args.extend(config['defaults'])
         args.extend(['--start', config['start']])
-        args.extend(['--title', '"{title_load}{title_by_period}"'.format(**config)])
+        args.extend(['--title', '"{title_drive}{title_by_period}"'.format(**config)])
         args.append('--slope-mode')
         args.extend(['--lower-limit', '0'])
         args.extend(['--units-exponent', '0'])
         args.append('DEF:stateavg={data_dir}/drivemon/gauge-state.rrd:value:LAST'.format(**config))
-        args.append('DEF:statemin={data_dir}/drivemon/gauge-state.rrd:value:MIN'.format(**config))
-        args.append('DEF:sstatemax={data_dir}/drivemon/gauge-state.rrd:value:MAX'.format(**config))
 
-        args.append('LINE1:stateavg{color_load_shortterm}:" 1 min"'.format(**config))
-        args.append('GPRINT:statemin:MIN:"%4.2lf Min"')
+        args.append('LINE1:stateavg{config_blue}:" 1 min"'.format(**config))
         args.append('GPRINT:stateavg:AVERAGE:"%4.2lf Avg"')
-        args.append('GPRINT:sstatemax:MAX:"%4.2lf Max"')
         args.append('GPRINT:stateavg:LAST:"%4.2lf Last\l"')
 
         args.append('COMMENT:"{last_update}"'.format(**config))

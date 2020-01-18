@@ -32,8 +32,8 @@ float get_drive_state(char *string)
 int get_drive(char c)
 {
     char command[100];
-    sprintf(command, "/sbin/hdparm -C /dev/sd%c", c);
-    // sprintf(command, "cat /dev/sd%c", c);
+    // sprintf(command, "/sbin/hdparm -C /dev/sd%c", c);
+    sprintf(command, "cat /dev/sd%c", c);
     FILE *fp = popen(command, "r");
     char lines[3][LINE_SIZE];
     for (int i = 0; i < 3; i++)
@@ -53,7 +53,7 @@ int get_drive(char c)
 
 int main(int argc, char **argv)
 {
-    if (argc <= 1)
+    if (argc != 2)
         exit(-1);
     int status = setvbuf(stdout,
                          /* buf  = */ NULL,
@@ -74,12 +74,14 @@ int main(int argc, char **argv)
 
     while (1)
     {
-        for (int i = 1; i < argc; i++)
+        char* s = argv[1];
+        while(*s != '\0')
         {
-            char c = argv[i][0]; //first caracter only
+            char c = *s;
             if (!(c >= 'a' && c <= 'z'))
                 continue;
             get_drive(c);
+            s++;
         }
         sleep(interval);
     }
