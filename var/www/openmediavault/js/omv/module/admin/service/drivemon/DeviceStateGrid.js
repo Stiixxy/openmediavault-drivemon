@@ -77,6 +77,15 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
             disabled: true,
             handler: Ext.Function.bind(me.onShutdownButton, me, [ me ]),
             scope: me
+        },{
+            id: me.getId() + "-refresh",
+            xtype: "button",
+            text: _("Refresh"),
+            icon: "images/refresh.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: false,
+            handler: Ext.Function.bind(me.onRefreshButton, me, [ me ]),
+            scope: me
         },
         ]
     },
@@ -109,6 +118,10 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
                 }
             }
         });
+    },
+
+    onRefreshButton: function(){
+        Ext.getCmp("deviceStateGrid").doReload();
     },
 
     onSelectionChange: function(model, records) {
