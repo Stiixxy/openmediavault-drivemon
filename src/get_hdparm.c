@@ -48,7 +48,7 @@ int get_drive(char c)
     replace_char(lines[1], '/', '_');
     int state = get_drive_state(lines[2]);
 
-    printf("PUTVAL %s/drivemon-%s/drive_state interval=%d N:%d\n", hostname, lines[1], interval, state);
+    printf("PUTVAL %s/drivemon-%s/gauge-drive_state interval=%d N:%d\n", hostname, lines[1], interval, state);
 }
 
 int main(int argc, char **argv)

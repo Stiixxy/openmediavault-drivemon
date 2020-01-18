@@ -14,6 +14,16 @@ case "$1" in
         # reload override file
         systemctl daemon-reload
 
+        if [ -z "$2" ]; then
+			echo "Restarting services ..."
+			if deb-systemd-helper is-enabled collectd.service; then
+				deb-systemd-invoke restart collectd.service || :
+			fi
+		fi
+
+        omv-mkconf collectd
+        monit restart collectd
+
         # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
