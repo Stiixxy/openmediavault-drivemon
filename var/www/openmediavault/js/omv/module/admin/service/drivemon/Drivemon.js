@@ -20,6 +20,6 @@ OMV.WorkspaceManager.registerNode({
     id      : "drivemon",
     path    : "/service",
     text    : _("Drivemon"),
-    icon16  : "images/docker_main.png",
-    iconSvg : "images/docker_main.svg"
+    icon16  : "images/hdd.png",
+    iconSvg : "images/hdd.svg"
 });
