@@ -109,10 +109,12 @@ class OMVRpcServiceExample extends ServiceAbstract
         );
 
         $output = shell_exec("hdparm -C " . $object["drives"]);
-
-        $result = array(
-            "output" => $output
-        );
+        
+        $result = [];
+        array_push($result, [
+            "name" => "/dev/sda",
+            "state" => "idle"
+        ]);
 
         return $result;
     }
