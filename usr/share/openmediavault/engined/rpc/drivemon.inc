@@ -53,7 +53,7 @@ use OMV\Rpc\Rpc;
  * @link     https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-docker-gui
  *
  */
-class OMVRpcServiceExample extends ServiceAbstract
+class OMVRpcServiceDrivemon extends ServiceAbstract
 {
 	private $dataModelPath = 'conf.service.drivemon';
 	
@@ -70,7 +70,7 @@ class OMVRpcServiceExample extends ServiceAbstract
      */
     private function _getEventMessagePath()
     {
-        return "org.openmediavault.services.example";
+        return "org.openmediavault.services.drivemon";
     }
 
     /**
@@ -80,7 +80,7 @@ class OMVRpcServiceExample extends ServiceAbstract
      */
     public function getName()
     {
-        return "Example";  // RPC Service name. Same as in .js files
+        return "Drivemon";  // RPC Service name. Same as in .js files
     }
 
     /**

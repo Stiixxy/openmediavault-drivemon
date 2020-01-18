@@ -1,4 +1,4 @@
-Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
+Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
     extend: "OMV.workspace.grid.Panel",
     alias: "widget.deviceStateGrid",
 
@@ -7,7 +7,7 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
     hideAddButton: true,
     hideEditButton: true,
 
-    rpcService: "Example",
+    rpcService: "Drivemon",
     rpcGetMethod: "getDriveStatus",
     requires: [
         "OMV.data.Store",
@@ -57,7 +57,7 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
                 proxy: {
                     type: "rpc",
                     rpcData: {
-                        service: "Example",
+                        service: "Drivemon",
                         method: "getDriveStatus",
                     }
                 }
@@ -69,8 +69,8 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
 
 OMV.WorkspaceManager.registerPanel({
     id: "driveState",
-    path: "/service/example",
+    path: "/service/drivemon",
     text: _("Device state"),
     position: 15,
-    className: "OMV.module.admin.service.example.DeviceStateGrid"
+    className: "OMV.module.admin.service.drivemon.DeviceStateGrid"
 });

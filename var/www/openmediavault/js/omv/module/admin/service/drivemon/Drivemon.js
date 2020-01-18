@@ -17,9 +17,9 @@
 
 // require("js/omv/WorkspaceManager.js")
 OMV.WorkspaceManager.registerNode({
-    id      : "example",
+    id      : "drivemon",
     path    : "/service",
-    text    : _("Example"),
+    text    : _("Drivemon"),
     icon16  : "images/docker_main.png",
     iconSvg : "images/docker_main.svg"
 });
