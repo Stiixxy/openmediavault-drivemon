@@ -7,6 +7,8 @@ set -e
 
 case "$1" in
     configure)
+        chmod +x /usr/share/openmediavault/confdb/create.d/conf.service.drivemon.sh
+
         # reload override file
         systemctl daemon-reload
 

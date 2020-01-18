@@ -7,9 +7,6 @@
         "iterable": false
     },
     "properties": {
-        "enable": {
-            "type": "boolean"
-        },
         "drives": {
             "type": "string"
         }

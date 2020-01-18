@@ -93,7 +93,6 @@ class OMVRpcServiceExample extends ServiceAbstract
 	{
 		$this->registerMethod('getSettings');
 		$this->registerMethod('setSettings');
-		$this->registerMethod('getDashboard');
 		$this->registerMethod('getDriveStatus');
     }
 
@@ -128,20 +127,6 @@ class OMVRpcServiceExample extends ServiceAbstract
         return $result;
     }
     
-	public function getDashboard($params, $context)
-	{
-		$this->validateMethodContext(
-            $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
-		);
-		
-		$settings=array();
-
-        $settings["set"] = true;
-
-        return $settings;
-    }
-
 	public function getSettings($params, $context)
 	{
 		$this->validateMethodContext(
@@ -151,7 +136,6 @@ class OMVRpcServiceExample extends ServiceAbstract
 		
 		$settings=$this->database->getAssoc($this->dataModelPath);
 
-        $settings["enable"] = boolval($settings["enable"]);
         $settings["drives"] = $settings["drives"];
 
         return $settings;
@@ -168,9 +152,6 @@ class OMVRpcServiceExample extends ServiceAbstract
                 '{' .
 				'    "type": "object",' .
 				'    "properties": {' .
-				'        "enable": {' .
-				'            "type": "boolean"' .
-				'        },' .
 				'        "drives": {' .
 				'            "type": "string"' .
 				'        }' .
@@ -179,7 +160,6 @@ class OMVRpcServiceExample extends ServiceAbstract
 		);
 		
 		$object = array(
-            "enable" => array_boolval($params, "enable"),
             "drives" => $params['drives']
         );
 

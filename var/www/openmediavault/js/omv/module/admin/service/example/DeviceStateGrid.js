@@ -6,7 +6,7 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
     hideDeleteButton: true,
     hideAddButton: true,
     hideEditButton: true,
-    
+
     rpcService: "Example",
     rpcGetMethod: "getDriveStatus",
     requires: [
@@ -23,18 +23,18 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
     },
 
     columns: [{
-		xtype: "enabledcolumn",
-		text: _("On"),
-		sortable: true,
-		dataIndex: "enabled",
-		stateId: "enabled"
-	},{
+        xtype: "enabledcolumn",
+        text: _("On"),
+        sortable: true,
+        dataIndex: "enabled",
+        stateId: "enabled"
+    }, {
         xtype: "textcolumn",
         text: _("Name"),
         dataIndex: 'name',
         sortable: true,
         stateId: 'name',
-    },{
+    }, {
         xtype: "textcolumn",
         text: _("State"),
         dataIndex: 'state',
@@ -42,7 +42,7 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
         stateId: 'state',
     }],
 
-    initComponent: function() {
+    initComponent: function () {
         var me = this;
         Ext.apply(me, {
             store: Ext.create("OMV.data.Store", {
