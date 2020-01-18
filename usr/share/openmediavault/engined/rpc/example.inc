@@ -104,17 +104,26 @@ class OMVRpcServiceExample extends ServiceAbstract
             array("role" => OMV_ROLE_ADMINISTRATOR)
         );
         
-        $object = array(
-            "drives" => $params["drives"]
-        );
+        $settings=$this->database->getAssoc($this->dataModelPath);
+        $settings["drives"] = $settings["drives"];
 
-        $output = shell_exec("hdparm -C " . $object["drives"]);
-        
         $result = [];
-        array_push($result, [
-            "name" => "/dev/sda",
-            "state" => "idle"
-        ]);
+
+        $output = shell_exec("hdparm -C " . $settings["drives"]);
+        $lines = explode("\n", $output);
+        for($i = 0; $i + 3 <= count($lines); $i += 3){
+            $name = (string)$lines[$i + 1];
+            $name = str_replace(":", "", $name);
+
+            $state = (string)$lines[$i + 2];
+            $state = str_replace(" drive state is:  ", "", $state);
+
+            array_push($result, [
+                "enabled" => boolval($state == "active/idle"),
+                "name" => $name,
+                "state" => $state
+            ]);
+        }
 
         return $result;
     }

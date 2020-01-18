@@ -52,9 +52,6 @@ Ext.define('OMV.module.admin.service.example.Dashboard', {
             rpcData: {
                 service: "Example",
                 method: "getDriveStatus",
-                params: {
-                    drives: drives
-                }
             }
         });
     },

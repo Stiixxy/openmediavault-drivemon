@@ -23,6 +23,12 @@ Ext.define("OMV.module.admin.service.example.DeviceStateGrid", {
     },
 
     columns: [{
+		xtype: "enabledcolumn",
+		text: _("On"),
+		sortable: true,
+		dataIndex: "enabled",
+		stateId: "enabled"
+	},{
         xtype: "textcolumn",
         text: _("Name"),
         dataIndex: 'name',
