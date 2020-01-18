@@ -17,7 +17,7 @@ void replace_char(char *string, char from, char to)
     }
 }
 
-int get_drive_state(char *string)
+float get_drive_state(char *string)
 {
     if (strstr(string, "active/idle") != NULL)
         return 1;
@@ -46,9 +46,9 @@ int get_drive(char c)
 
     replace_char(lines[1], ':', '\0');
     replace_char(lines[1], '/', '_');
-    int state = get_drive_state(lines[2]);
+    float state = get_drive_state(lines[2]);
 
-    printf("PUTVAL %s/drivemon-%s/gauge-drive_state interval=%d N:%d\n", hostname, lines[1], interval, state);
+    printf("PUTVAL %s/drivemon/gauge-state interval=%d N:%f\n", hostname, interval, state);
 }
 
 int main(int argc, char **argv)

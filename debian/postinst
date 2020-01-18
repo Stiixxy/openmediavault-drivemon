@@ -21,9 +21,6 @@ case "$1" in
 			fi
 		fi
 
-        omv-mkconf collectd
-        monit restart collectd
-
         # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
