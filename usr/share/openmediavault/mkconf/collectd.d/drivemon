@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -e
+
+. /etc/default/openmediavault
+. /usr/share/openmediavault/scripts/helper-functions
+
+OMV_COLLECTD_CONFIG_DIR=${OMV_COLLECTD_CONFIG_DIR:-"/etc/collectd/collectd.conf.d"}
+
+disks=$(omv-rpc 'Drivemon' 'getSettings' '{"includeroot": true}' |
+    jq --raw-output '.[]' | head -n 1)
+user=$(id -nu 1000)
+group=$(id -ng 1000) 
+
+cat <<EOF > "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+LoadPlugin exec
+<Plugin exec>
+EOF
+
+echo "  Exec \"${user}:${group}\" \"/bin/get_hdparm\" \"${disks}\""  >> "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+
+cat <<EOF >> "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+</Plugin>
+EOF

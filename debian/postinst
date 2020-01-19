@@ -8,19 +8,14 @@ set -e
 case "$1" in
     configure)
         chmod +x /usr/share/openmediavault/confdb/create.d/conf.service.drivemon.sh
+        chmod +x /usr/share/openmediavault/mkconf/collectd.d/drivemon
+        
         chown root:root /bin/get_hdparm
         chmod 4755 /bin/get_hdparm
 
         # reload override file
         systemctl daemon-reload
-
-        if [ -z "$2" ]; then
-			echo "Restarting services ..."
-			if deb-systemd-helper is-enabled collectd.service; then
-				deb-systemd-invoke restart collectd.service || :
-			fi
-		fi
-
+		
         # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale

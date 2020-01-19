@@ -150,6 +150,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
 		
 		$settings=$this->database->getAssoc($this->dataModelPath);
 
+        // Because of mkconf drives MUST stay the first return value
         $settings["drives"] = $settings["drives"];
 
         return $settings;

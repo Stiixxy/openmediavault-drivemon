@@ -32,8 +32,8 @@ float get_drive_state(char *string)
 int get_drive(char c)
 {
     char command[100];
-    // sprintf(command, "/sbin/hdparm -C /dev/sd%c", c);
-    sprintf(command, "cat /dev/sd%c", c);
+    sprintf(command, "/sbin/hdparm -C /dev/sd%c", c);
+    // sprintf(command, "cat /dev/sd%c", c);
     FILE *fp = popen(command, "r");
     char lines[3][LINE_SIZE];
     for (int i = 0; i < 3; i++)
