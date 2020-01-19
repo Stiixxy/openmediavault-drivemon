@@ -109,7 +109,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
 
         $result = [];
 
-        $output = shell_exec("hdparm -C " . $settings["drives"]);
+        $output = shell_exec("hdparm -C /dev/sd[" . $settings["drives"] . "]");
         $lines = explode("\n", $output);
         for($i = 0; $i + 3 <= count($lines); $i += 3){
             $name = (string)$lines[$i + 1];
@@ -150,6 +150,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
 		
 		$settings=$this->database->getAssoc($this->dataModelPath);
 
+        // Because of mkconf drives MUST stay the first return value
         $settings["drives"] = $settings["drives"];
 
         return $settings;
@@ -177,6 +178,9 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
             "drives" => $params['drives']
         );
 
+        if(!preg_match("/\A[a-zA-Z]*\Z/", $object["drives"])) 
+            throw new Exception("Drives must be a string of caracters");
+
 		$config = new ConfigObject($this->dataModelPath);
         $config->setAssoc($object);
         $this->database->set($config);
@@ -186,6 +190,9 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
             $this->_getEventMessagePath(),
             $object
         );
+
+        $moduleMngr = \OMV\Engine\Module\Manager::getInstance();
+        $moduleMngr->getModule("collectd")->setDirty();
 
         return $object;
 	}
