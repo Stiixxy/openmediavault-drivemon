@@ -4,8 +4,5 @@ An openmediavault plugin to check drive states
 
 ## Installing
 
-1. clone this repo
-2. cd openmediavault-drivemon/debian
-3. sudo debuild -us -uc -d
-4. cd ../..
-5. sudo apt install ./openmediavault-drivemon_**version**_all.deb
+1. Download the latest release from [releases](https://github.com/Stiixxy/openmediavault-drivemon/releases/latest)
+2. Install apt package ``` sudo apt install ./openmediavault-drivemon_version_all.deb ```
