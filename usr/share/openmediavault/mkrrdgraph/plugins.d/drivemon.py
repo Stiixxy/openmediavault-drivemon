@@ -20,34 +20,39 @@
 # along with OpenMediaVault. If not, see <http://www.gnu.org/licenses/>.
 import openmediavault.mkrrdgraph
 import openmediavault.subprocess
-
+import openmediavault.rpc
 
 class Plugin(openmediavault.mkrrdgraph.IPlugin):
     def create_graph(self, config):
-        # http://paletton.com/#uid=33r0-0kwi++bu++hX++++rd++kX
-        config.update(
-            {
-                'title_drive': 'Drive state',
-                'config_blue': '#0bb6ff',  # blue
-            }
-        )
-        args = []
-        # yapf: disable
-        # pylint: disable=line-too-long
-        args.append('{image_dir}/drivestate-{period}.png'.format(**config))
-        args.extend(config['defaults'])
-        args.extend(['--start', config['start']])
-        args.extend(['--title', '"{title_drive}{title_by_period}"'.format(**config)])
-        args.append('--slope-mode')
-        args.extend(['--lower-limit', '0'])
-        args.extend(['--units-exponent', '0'])
-        args.append('DEF:stateavg={data_dir}/drivemon/gauge-state.rrd:value:LAST'.format(**config))
+        drives = openmediavault.rpc.call("Drivemon", "getSettings")['drives']
+        for c in drives:
+            # http://paletton.com/#uid=33r0-0kwi++bu++hX++++rd++kX
+            drivename = '/dev/sd' + c
+            config.update(
+                {
+                    'title_drive': drivename,
+                    'config_blue': '#0bb6ff',  # blue
+                    'drive_letter': c
+                }
+            )
+            args = []
+            # yapf: disable
+            # pylint: disable=line-too-long
+            args.append('{image_dir}/drivestate-_dev_sd{drive_letter}-{period}.png'.format(**config))
+            args.extend(config['defaults'])
+            args.extend(['--start', config['start']])
+            args.extend(['--title', '"{title_drive}{title_by_period}"'.format(**config)])
+            args.append('--slope-mode')
+            args.extend(['--lower-limit', '-0.5'])
+            args.extend(['--upper-limit', '1.5'])
+            args.extend(['--units-exponent', '0'])
+            args.append('DEF:stateavg={data_dir}/drivemon-_dev_sd{drive_letter}/gauge-state.rrd:value:LAST'.format(**config))
 
-        args.append('LINE1:stateavg{config_blue}:" 1 min"'.format(**config))
-        args.append('GPRINT:stateavg:AVERAGE:"%4.2lf Avg"')
-        args.append('GPRINT:stateavg:LAST:"%4.2lf Last\l"')
+            args.append('LINE2:stateavg{config_blue}:"active"'.format(**config))
+            args.append('GPRINT:stateavg:AVERAGE:"%4.2lf Avg"')
+            args.append('GPRINT:stateavg:LAST:"%4.2lf Last\l"')
 
-        args.append('COMMENT:"{last_update}"'.format(**config))
-        # yapf: enable
-        openmediavault.mkrrdgraph.call_rrdtool_graph(args)
+            args.append('COMMENT:"{last_update}"'.format(**config))
+            # yapf: enable
+            openmediavault.mkrrdgraph.call_rrdtool_graph(args)
         return 0

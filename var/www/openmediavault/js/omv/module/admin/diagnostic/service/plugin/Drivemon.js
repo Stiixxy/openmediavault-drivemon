@@ -22,35 +22,56 @@
 // require("js/omv/workspace/panel/Textarea.js")
 // require("js/omv/workspace/panel/RrdGraph.js")
 
-/**
- * @ingroup webgui
- * @class OMV.module.admin.diagnostic.service.plugin.nut.Charge
- * @derived OMV.workspace.panel.RrdGraph
- */
-Ext.define("OMV.module.admin.diagnostic.service.plugin.drivemon.State", {
-    extend: "OMV.workspace.panel.RrdGraph",
-    alias: "omv.plugin.diagnostic.servoce.plugin.drivemon.state",
+// /**
+//  * @ingroup webgui
+//  * @class OMV.module.admin.diagnostic.service.plugin.nut.Charge
+//  * @derived OMV.workspace.panel.RrdGraph
+//  */
+// Ext.define("OMV.module.admin.diagnostic.service.plugin.drivemon.State", {
+//     extend: "OMV.workspace.panel.RrdGraph",
+//     alias: "omv.plugin.diagnostic.servoce.plugin.drivemon.state",
 
-	title: _("State"),
-	rrdGraphName: "drivestate"
-});
+// 	title: _("/dev/sda"),
+// 	rrdGraphName: "drivestate-_dev_sda"
+// });
 
 /**
  * @ingroup webgui
  * @class OMV.module.admin.diagnostic.service.plugin.Nut
  * @derived OMV.workspace.tab.Panel
  */
-Ext.define("OMV.module.admin.diagnostic.service.plugin.Nut", {
+Ext.define("OMV.module.admin.diagnostic.service.plugin.Drivemon", {
 	extend: "OMV.workspace.tab.Panel",
 	alias: "omv.plugin.diagnostic.service.drivemon",
+	requires: [
+		"OMV.Rpc"
+	],
 
 	title: _("Drivemon"),
 
 	initComponent: function() {
 		var me = this;
-		me.items = [
-			Ext.create("OMV.module.admin.diagnostic.service.plugin.drivemon.State"),
-		];
+		me.items = [];
 		me.callParent(arguments);
+
+		// Execute RPC to get the information required to add tab panels.
+		OMV.Rpc.request({
+			callback: function(id, success, response) {
+				var drives = response['drives'];
+				// Create a RRD graph panel per drive.
+				for(var c of drives) {
+					var name = "_dev_sd" + c;
+					me.add(Ext.create("OMV.workspace.panel.RrdGraph", {
+						title: name.replace(/_/g, "/"),
+						rrdGraphName: "drivestate-" + name
+					}));
+				}
+			},
+			relayErrors: false,
+			rpcData: {
+				service: "Drivemon",
+				method: "getSettings"
+			}
+		});
 	}
 });

@@ -191,6 +191,9 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
             $object
         );
 
+        $moduleMngr = \OMV\Engine\Module\Manager::getInstance();
+        $moduleMngr->getModule("collectd")->setDirty();
+
         return $object;
 	}
 
