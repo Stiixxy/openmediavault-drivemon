@@ -16,6 +16,10 @@ Ext.define('OMV.module.admin.service.drivemon.Settings', {
                 xtype: 'textfield',
                 name: 'drives',
                 fieldLabel: _('Drives'),
+                plugins: [{
+                    ptype: "fieldinfo",
+                    text: _("Last letters of drive names as 1 string. So /dev/sda = a & /dev/sda, /dev/sdb, /dev/sdf = abf")
+                }]
             }]
         }];
     }
