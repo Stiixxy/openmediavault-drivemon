@@ -46,7 +46,7 @@ class Plugin(openmediavault.mkrrdgraph.IPlugin):
             args.extend(['--lower-limit', '-0.5'])
             args.extend(['--upper-limit', '1.5'])
             args.extend(['--units-exponent', '0'])
-            args.append('DEF:stateavg={data_dir}/drivemon-_dev_sd{drive_letter}/gauge-state.rrd:value:LAST'.format(**config))
+            args.append('DEF:stateavg={data_dir}/drivemon-_dev_sd{drive_letter}/gauge-state.rrd:value:AVERAGE'.format(**config))
 
             args.append('LINE2:stateavg{config_blue}:"active"'.format(**config))
             args.append('GPRINT:stateavg:AVERAGE:"%4.2lf Avg"')

@@ -1,8 +1,13 @@
+openmediavault-drivemon (4.1.1) stable; urgency=low
+
+  * Bugfix for graphs
+
+ -- Stijn Veenman <veenman.stijn@gmail.com>  Tue, 19 Jan 2020 19:50:00 -0600
 openmediavault-drivemon (4.1.0) stable; urgency=low
 
   * Added graphs for each monitored drive
 
- -- Stijn Veenman <veenman.stijn@gmail.com>  Tue, 1 Jan 2020 14:00:00 -0600
+ -- Stijn Veenman <veenman.stijn@gmail.com>  Tue, 19 Jan 2020 14:00:00 -0600
 openmediavault-drivemon (4.0.2) stable; urgency=low
 
   * Initial release
