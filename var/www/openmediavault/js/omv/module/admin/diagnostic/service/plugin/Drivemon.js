@@ -22,24 +22,6 @@
 // require("js/omv/workspace/panel/Textarea.js")
 // require("js/omv/workspace/panel/RrdGraph.js")
 
-// /**
-//  * @ingroup webgui
-//  * @class OMV.module.admin.diagnostic.service.plugin.nut.Charge
-//  * @derived OMV.workspace.panel.RrdGraph
-//  */
-// Ext.define("OMV.module.admin.diagnostic.service.plugin.drivemon.State", {
-//     extend: "OMV.workspace.panel.RrdGraph",
-//     alias: "omv.plugin.diagnostic.servoce.plugin.drivemon.state",
-
-// 	title: _("/dev/sda"),
-// 	rrdGraphName: "drivestate-_dev_sda"
-// });
-
-/**
- * @ingroup webgui
- * @class OMV.module.admin.diagnostic.service.plugin.Nut
- * @derived OMV.workspace.tab.Panel
- */
 Ext.define("OMV.module.admin.diagnostic.service.plugin.Drivemon", {
 	extend: "OMV.workspace.tab.Panel",
 	alias: "omv.plugin.diagnostic.service.drivemon",
