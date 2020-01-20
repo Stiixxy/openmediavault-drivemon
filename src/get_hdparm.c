@@ -29,11 +29,10 @@ float get_drive_state(char *string)
     return -1;
 }
 
-int get_drive(char c)
+void get_drive(char c)
 {
     char command[100];
-    sprintf(command, "/sbin/hdparm -C /dev/sd%c", c);
-    // sprintf(command, "cat /dev/sd%c", c);
+    sprintf(command, "/sbin/hdparm -C /dev/sd%c 2>&1", c);
     FILE *fp = popen(command, "r");
     char lines[3][LINE_SIZE];
     for (int i = 0; i < 3; i++)
@@ -43,6 +42,8 @@ int get_drive(char c)
 
     /* close */
     pclose(fp);
+
+    if(strstr(lines[0], "No such file or directory") != NULL) return;
 
     replace_char(lines[1], ':', '\0');
     replace_char(lines[1], '/', '_');
