@@ -11,14 +11,22 @@ disks=$(omv-rpc 'Drivemon' 'getSettings' '{"includeroot": true}' |
     jq --raw-output '.[]' | head -n 1)
 user=$(id -nu 1000)
 group=$(id -ng 1000) 
+file="${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
 
-cat <<EOF > "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+if [ -z "$disks" ]
+then
+if [ -f $file ] ; then
+    rm $file
+fi
+else
+cat <<EOF > $file
 LoadPlugin exec
 <Plugin exec>
 EOF
 
-echo "  Exec \"${user}:${group}\" \"/bin/get_hdparm\" \"${disks}\""  >> "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+echo "  Exec \"${user}:${group}\" \"/bin/get_hdparm\" \"${disks}\""  >> "$file"
 
-cat <<EOF >> "${OMV_COLLECTD_CONFIG_DIR}/drivemon.conf"
+cat <<EOF >> $file
 </Plugin>
 EOF
+fi

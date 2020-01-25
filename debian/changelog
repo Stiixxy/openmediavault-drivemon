@@ -1,3 +1,10 @@
+openmediavault-drivemon (4.1.2) stable; urgency=low
+
+  * Fixed segfault in get_hdparm for non existant drives
+  * No collectd config is created if no drives are selected
+  * General cleanup and improvements
+
+ -- Stijn Veenman <veenman.stijn@gmail.com>  Tue, 19 Jan 2020 19:50:00 -0600
 openmediavault-drivemon (4.1.1) stable; urgency=low
 
   * Bugfix for graphs

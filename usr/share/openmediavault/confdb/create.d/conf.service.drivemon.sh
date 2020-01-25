@@ -30,7 +30,7 @@ SERVICE_XPATH="/config/services/${SERVICE_XPATH_NAME}"
 if ! omv_config_exists "/config/services/drivemon"; then
     echo "Initialize configuration"
     omv_config_add_node "/config/services" "${SERVICE_XPATH_NAME}"
-    omv_config_add_key "${SERVICE_XPATH}" "drives" "/dev/sda"
+    omv_config_add_key "${SERVICE_XPATH}" "drives" ""
 fi
 
 exit 0
