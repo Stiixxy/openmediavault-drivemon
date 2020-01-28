@@ -94,7 +94,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         
         $result = [];
 
-        $output = shell_exec("ls /dev/sd?");
+        $output = shell_exec('find /dev/ -maxdepth 1 -type b -name "sd[a-z]"');
         $lines = explode("\n", $output);
         for($i = 0; $i <= count($lines); $i++){
             $name = (string)$lines[$i];
