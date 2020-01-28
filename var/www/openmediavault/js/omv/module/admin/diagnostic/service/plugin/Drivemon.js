@@ -41,11 +41,11 @@ Ext.define("OMV.module.admin.diagnostic.service.plugin.Drivemon", {
             callback: function(id, success, response) {
                 var drives = response['drives'];
                 // Create a RRD graph panel per drive.
-                for(var c of drives) {
-                    var name = "_dev_sd" + c;
+                drives = drives.split(',');
+                for(var name of drives) {
                     me.add(Ext.create("OMV.workspace.panel.RrdGraph", {
-                        title: name.replace(/_/g, "/"),
-                        rrdGraphName: "drivestate-" + name
+                        title: name,
+                        rrdGraphName: "drivestate-" + name.replace(/\//g, "_")
                     }));
                 }
             },
