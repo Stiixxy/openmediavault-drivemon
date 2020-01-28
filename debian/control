@@ -8,7 +8,7 @@ Standards-Version: 3.9.6
 Homepage: http://omv-extras.org/
 
 Package: openmediavault-drivemon
-Architecture: all
+Architecture: any
 Depends: openmediavault (>= 4.1.23),
          ${misc:Depends},
 Description: openmediavault plugin to manage drive states
