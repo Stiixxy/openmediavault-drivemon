@@ -13,12 +13,49 @@ Ext.define('OMV.module.admin.service.drivemon.Settings', {
                 labelSeparator: ''
             },
             items: [{
-                xtype: 'textfield',
+                xtype: 'checkboxgridfield',
                 name: 'drives',
                 fieldLabel: _('Drives'),
+                valueField: "name",
+                useStringValue: true,
+                minHeight: 170,
+
+                store: Ext.create("OMV.data.Store", {
+                    autoLoad: true,
+                    model: OMV.data.Model.createImplicit({
+                        idProperty: "name",
+                        fields: [
+                            { name: "name", type: "string" },
+                        ]
+                    }),
+                    proxy: {
+                        type: "rpc",
+                        appendSortParams: false,
+                        rpcData: {
+                            service: "drivemon",
+                            method: "getPossibleDrives"
+                        }
+                    },
+                    sorters: [{
+                        direction: "ASC",
+                        property: "name"
+                    }]
+                }),
+                gridConfig: {
+                    stateful: true,
+                    stateId: "fd292216-41fa-11ea-b77f-2e728ce88125",
+                    columns: [{
+                        xtype: "emptycolumn",
+                        text: _("Drive"),
+                        sortable: true,
+                        dataIndex: "name",
+                        stateId: "name",
+                        flex: 1
+                    }]
+                },
                 plugins: [{
                     ptype: "fieldinfo",
-                    text: _("Last letters of drive names as 1 string. So /dev/sda = a & /dev/sda, /dev/sdb, /dev/sdf = abf")
+                    text: _("Select the devices that you want to show and monitor")
                 }]
             }]
         }];

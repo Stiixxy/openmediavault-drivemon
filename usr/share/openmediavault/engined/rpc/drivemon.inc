@@ -52,6 +52,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         $this->registerMethod('setSettings');
         $this->registerMethod('getDriveStatus');
         $this->registerMethod('shutdownDrive');
+        $this->registerMethod('getPossibleDrives');
     }
 
     public function getDriveStatus($params, $context)
@@ -85,6 +86,29 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         return $result;
     }
 
+    public function getPossibleDrives($params, $context){
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+        
+        $result = [];
+
+        $output = shell_exec("ls /dev/sd?");
+        $lines = explode("\n", $output);
+        for($i = 0; $i <= count($lines); $i++){
+            $name = (string)$lines[$i];
+
+            if(!empty($name)){
+                array_push($result, [
+                    "name" => $name,
+                ]);
+            }
+        }
+
+        return $result;
+    }
+
     public function shutdownDrive($params, $context){
         $this->validateMethodContext(
             $context,
@@ -107,9 +131,15 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         
         $settings=$this->database->getAssoc($this->dataModelPath);
 
-        // Because of mkconf drives MUST stay the first return value
-        $settings["drives"] = $settings["drives"];
+        $full_drives = "";
+        for ($i = 0; $i < strlen($settings["drives"]); $i++){
+            if($i !== 0) $full_drives = $full_drives . ",";
+            $full_drives = $full_drives . "/dev/sd" . $settings["drives"][$i];
+        }
 
+        // Because of mkconf drives MUST stay the first return value
+        $settings["drives"] = $full_drives;
+        
         return $settings;
     }
     
@@ -125,8 +155,14 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
             "drives" => $params['drives']
         );
 
-        if(!preg_match("/\A[a-zA-Z]*\Z/", $object["drives"])) 
-            throw new Exception("Drives must be a string of caracters");
+        $driveletters = "";
+        $drives = explode(",", $object["drives"]);
+        for($i = 0; $i <= count($drives); $i++){
+            $name = (string)$drives[$i];
+            $driveletters = $driveletters . substr($name, 7);
+        }
+
+        $object["drives"] = $driveletters;
 
         $config = new ConfigObject($this->dataModelPath);
         $config->setAssoc($object);
