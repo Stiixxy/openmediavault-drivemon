@@ -119,17 +119,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
             $context,
             array("role" => OMV_ROLE_ADMINISTRATOR)
         );
-        $this->validateMethodParams(
-            $params,
-                '{' .
-                '    "type": "object",' .
-                '    "properties": {' .
-                '        "drives": {' .
-                '            "type": "string"' .
-                '        }' .
-                '    }' .
-                '}' 				
-        );
+        $this->validateMethodParams($params, "rpc.drivemon.settings");
         
         $object = array(
             "drives" => $params['drives']
