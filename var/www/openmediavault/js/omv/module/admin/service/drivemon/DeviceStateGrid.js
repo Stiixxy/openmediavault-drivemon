@@ -1,26 +1,22 @@
 Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
     extend: "OMV.workspace.grid.Panel",
-    alias: "widget.deviceStateGrid",
+	requires: [
+		"OMV.Rpc",
+		"OMV.data.Store",
+		"OMV.data.Model",
+		"OMV.data.proxy.Rpc"
+	],
 
-    id: "deviceStateGrid",
-    hideDeleteButton: true,
-    hideAddButton: true,
-    hideEditButton: true,
-
-    rpcService: "Drivemon",
-    rpcGetMethod: "getDriveStatus",
-    requires: [
-        "OMV.data.Store",
-        "OMV.data.Model",
-        "OMV.data.proxy.Rpc"
-    ],
-
-    stateful: true,
+    autoReload: true,
+	rememberSelected: true,
+	disableLoadMaskOnLoad: true,
+	hideAddButton: true,
+	hideEditButton: true,
+	hideRefreshButton: true,
+	hidePagingToolbar: false,
+    
+	stateful: true,
     stateId: "b06cd0b8-39f7-11ea-a137-2e728ce88125",
-
-    defaults: {
-        flex: 1
-    },
 
     columns: [{
         xtype: "enabledcolumn",
@@ -46,9 +42,9 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
         var me = this;
         Ext.apply(me, {
             store: Ext.create("OMV.data.Store", {
-                pageSize: 10,
                 autoLoad: true,
                 model: OMV.data.Model.createImplicit({
+                    idProperty: "name",
                     fields: [
                         { name: "name", type: "string" },
                         { name: "state", type: "string" },
@@ -60,7 +56,12 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
                         service: "Drivemon",
                         method: "getDriveStatus",
                     }
-                }
+                },
+                remoteSort: true,
+				sorters: [{
+					direction: "ASC",
+					property: "name"
+				}]
             })
         });
         me.callParent(arguments);
@@ -75,8 +76,11 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
             icon: "images/shutdown.png",
             iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
             disabled: true,
-            handler: Ext.Function.bind(me.onShutdownButton, me, [ me ]),
-            scope: me
+            handler: me.onShutdownButton,
+            scope: me,
+            selectionConfig: {
+                minSelections: 1
+            }
         },{
             id: me.getId() + "-refresh",
             xtype: "button",
@@ -84,16 +88,15 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
             icon: "images/refresh.png",
             iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
             disabled: false,
-            handler: Ext.Function.bind(me.onRefreshButton, me, [ me ]),
+            handler: me.onRefreshButton,
             scope: me
-        },
-        ]
+        }]
     },
 
     onShutdownButton: function() {
         var me = this;
-        var sm = me.getSelectionModel();
-        var selRecords = sm.getSelection();
+        
+        var selRecords = me.getSelection();
         var driveList = "";
         for(i = 0; i < selRecords.length; i++) {
             if(i === 0) {
@@ -107,7 +110,8 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
             scope: me,
             callback: function(id, succcess){
                 if(succcess){
-                    Ext.getCmp("deviceStateGrid").doReload();
+                    var me = this;
+                    me.doReload();
                 }
             },
             rpcData: {
@@ -121,33 +125,9 @@ Ext.define("OMV.module.admin.service.drivemon.DeviceStateGrid", {
     },
 
     onRefreshButton: function(){
-        Ext.getCmp("deviceStateGrid").doReload();
-    },
-
-    onSelectionChange: function(model, records) {
         var me = this;
-        
-        var tbarBtnName = [ "shutdown" ];
-        var tbarBtnDisabled = {
-            "shutdown": true,
-        };
-
-        // Enable/disable buttons depending on the number of selected rows.
-        if(records.length > 0) {
-            tbarBtnDisabled["shutdown"] = false;
-        }
-
-        Ext.Array.each(tbarBtnName, function(name) {
-            var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
-            if(!Ext.isEmpty(tbarBtnCtrl)) {
-                if(true == tbarBtnDisabled[name]) {
-                    tbarBtnCtrl.disable();
-                } else {
-                    tbarBtnCtrl.enable();
-                }
-            }
-        });
-    }
+        me.doReload();
+    },
 });
 
 

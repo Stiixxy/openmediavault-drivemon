@@ -1,0 +1,12 @@
+[{
+        "type": "rpc",
+        "id": "rpc.drivemon.settings",
+        "params": {
+            "type": "object",
+            "properties": {
+                "drives": {
+                    "type": "string"
+                }
+            }
+        }
+}]

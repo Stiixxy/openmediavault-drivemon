@@ -12,14 +12,14 @@ use OMV\Rpc\Rpc;
 
 class OMVRpcServiceDrivemon extends ServiceAbstract
 {
-	private $dataModelPath = 'conf.service.drivemon';
-	
-	public function __construct(Database $database = null, Dispatcher $dispatcher = null){
+    private $dataModelPath = 'conf.service.drivemon';
+    
+    public function __construct(Database $database = null, Dispatcher $dispatcher = null){
         $this->database = $database ?: Database::getInstance();
         $this->dispatcher = $dispatcher ?: Dispatcher::getInstance();
-	}
-	
-	/**
+    }
+    
+    /**
      * Get the main event message path of the service. This is a helper
      * function to avoid "magic numbers".
      *
@@ -47,16 +47,17 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
      * @return void
      */
     public function initialize()
-	{
-		$this->registerMethod('getSettings');
-		$this->registerMethod('setSettings');
-		$this->registerMethod('getDriveStatus');
-		$this->registerMethod('shutdownDrive');
+    {
+        $this->registerMethod('getSettings');
+        $this->registerMethod('setSettings');
+        $this->registerMethod('getDriveStatus');
+        $this->registerMethod('shutdownDrive');
+        $this->registerMethod('getPossibleDrives');
     }
 
     public function getDriveStatus($params, $context)
-	{
-		$this->validateMethodContext(
+    {
+        $this->validateMethodContext(
             $context,
             array("role" => OMV_ROLE_ADMINISTRATOR)
         );
@@ -85,6 +86,29 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         return $result;
     }
 
+    public function getPossibleDrives($params, $context){
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+        
+        $result = [];
+
+        $output = shell_exec("ls /dev/sd?");
+        $lines = explode("\n", $output);
+        for($i = 0; $i <= count($lines); $i++){
+            $name = (string)$lines[$i];
+
+            if(!empty($name)){
+                array_push($result, [
+                    "name" => $name,
+                ]);
+            }
+        }
+
+        return $result;
+    }
+
     public function shutdownDrive($params, $context){
         $this->validateMethodContext(
             $context,
@@ -98,47 +122,49 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         shell_exec("hdparm -y " . $object["drivelist"]);
     }
     
-	public function getSettings($params, $context)
-	{
-		$this->validateMethodContext(
+    public function getSettings($params, $context)
+    {
+        $this->validateMethodContext(
             $context,
             array("role" => OMV_ROLE_ADMINISTRATOR)
-		);
-		
-		$settings=$this->database->getAssoc($this->dataModelPath);
+        );
+        
+        $settings=$this->database->getAssoc($this->dataModelPath);
+
+        $full_drives = "";
+        for ($i = 0; $i < strlen($settings["drives"]); $i++){
+            if($i !== 0) $full_drives = $full_drives . ",";
+            $full_drives = $full_drives . "/dev/sd" . $settings["drives"][$i];
+        }
 
         // Because of mkconf drives MUST stay the first return value
-        $settings["drives"] = $settings["drives"];
-
+        $settings["drives"] = $full_drives;
+        
         return $settings;
     }
     
-	public function setSettings($params, $context)
-	{
-		$this->validateMethodContext(
+    public function setSettings($params, $context)
+    {
+        $this->validateMethodContext(
             $context,
             array("role" => OMV_ROLE_ADMINISTRATOR)
-		);
-		$this->validateMethodParams(
-            $params,
-                '{' .
-				'    "type": "object",' .
-				'    "properties": {' .
-				'        "drives": {' .
-				'            "type": "string"' .
-				'        }' .
-				'    }' .
-				'}' 				
-		);
-		
-		$object = array(
+        );
+        $this->validateMethodParams($params, "rpc.drivemon.settings");
+        
+        $object = array(
             "drives" => $params['drives']
         );
 
-        if(!preg_match("/\A[a-zA-Z]*\Z/", $object["drives"])) 
-            throw new Exception("Drives must be a string of caracters");
+        $driveletters = "";
+        $drives = explode(",", $object["drives"]);
+        for($i = 0; $i <= count($drives); $i++){
+            $name = (string)$drives[$i];
+            $driveletters = $driveletters . substr($name, 7);
+        }
 
-		$config = new ConfigObject($this->dataModelPath);
+        $object["drives"] = $driveletters;
+
+        $config = new ConfigObject($this->dataModelPath);
         $config->setAssoc($object);
         $this->database->set($config);
 
@@ -152,7 +178,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         $moduleMngr->getModule("collectd")->setDirty();
 
         return $object;
-	}
+    }
 
 
 }

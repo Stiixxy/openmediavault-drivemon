@@ -23,37 +23,37 @@
 // require("js/omv/workspace/panel/RrdGraph.js")
 
 Ext.define("OMV.module.admin.diagnostic.service.plugin.Drivemon", {
-	extend: "OMV.workspace.tab.Panel",
-	alias: "omv.plugin.diagnostic.service.drivemon",
-	requires: [
-		"OMV.Rpc"
-	],
+    extend: "OMV.workspace.tab.Panel",
+    alias: "omv.plugin.diagnostic.service.drivemon",
+    requires: [
+        "OMV.Rpc"
+    ],
 
-	title: _("Drivemon"),
+    title: _("Drivemon"),
 
-	initComponent: function() {
-		var me = this;
-		me.items = [];
-		me.callParent(arguments);
+    initComponent: function() {
+        var me = this;
+        me.items = [];
+        me.callParent(arguments);
 
-		// Execute RPC to get the information required to add tab panels.
-		OMV.Rpc.request({
-			callback: function(id, success, response) {
-				var drives = response['drives'];
-				// Create a RRD graph panel per drive.
-				for(var c of drives) {
-					var name = "_dev_sd" + c;
-					me.add(Ext.create("OMV.workspace.panel.RrdGraph", {
-						title: name.replace(/_/g, "/"),
-						rrdGraphName: "drivestate-" + name
-					}));
-				}
-			},
-			relayErrors: false,
-			rpcData: {
-				service: "Drivemon",
-				method: "getSettings"
-			}
-		});
-	}
+        // Execute RPC to get the information required to add tab panels.
+        OMV.Rpc.request({
+            callback: function(id, success, response) {
+                var drives = response['drives'];
+                // Create a RRD graph panel per drive.
+                for(var c of drives) {
+                    var name = "_dev_sd" + c;
+                    me.add(Ext.create("OMV.workspace.panel.RrdGraph", {
+                        title: name.replace(/_/g, "/"),
+                        rrdGraphName: "drivestate-" + name
+                    }));
+                }
+            },
+            relayErrors: false,
+            rpcData: {
+                service: "Drivemon",
+                method: "getSettings"
+            }
+        });
+    }
 });

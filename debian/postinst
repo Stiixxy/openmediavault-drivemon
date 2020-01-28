@@ -7,15 +7,12 @@ set -e
 
 case "$1" in
     configure)
-        chmod +x /usr/share/openmediavault/confdb/create.d/conf.service.drivemon.sh
-        chmod +x /usr/share/openmediavault/mkconf/collectd.d/drivemon
-        
         chown root:root /bin/get_hdparm
         chmod 4755 /bin/get_hdparm
 
         # reload override file
         systemctl daemon-reload
-		
+
         # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
