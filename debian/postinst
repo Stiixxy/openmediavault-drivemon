@@ -15,7 +15,7 @@ case "$1" in
 
         # reload override file
         systemctl daemon-reload
-		
+
         # Activate package triggers.
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
