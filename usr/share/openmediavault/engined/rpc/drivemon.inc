@@ -53,6 +53,7 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         $this->registerMethod('getDriveStatus');
         $this->registerMethod('shutdownDrive');
         $this->registerMethod('getPossibleDrives');
+        $this->registerMethod('getRawDriveLetters');
     }
 
     public function getDriveStatus($params, $context)
@@ -120,6 +121,21 @@ class OMVRpcServiceDrivemon extends ServiceAbstract
         );
 
         shell_exec("hdparm -y " . $object["drivelist"]);
+    }
+
+    public function getRawDriveLetters($params, $context)
+    {
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+        
+        $settings=$this->database->getAssoc($this->dataModelPath);
+
+        // Because of mkconf drives MUST stay the first return value
+        $settings["drives"] = $settings["drives"];
+
+        return $settings;
     }
     
     public function getSettings($params, $context)
