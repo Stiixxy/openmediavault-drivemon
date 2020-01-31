@@ -1,1 +1,6 @@
 /bin
+debian/files
+debian/.debhelper/
+debian/openmediavault-drivemon.debhelper.log
+debian/openmediavault-drivemon.substvars
+debian/openmediavault-drivemon
