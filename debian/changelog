@@ -1,3 +1,8 @@
+openmediavault-drivemon (5.0.0) stable; urgency=low
+
+  * initial Openmediavault 5 port 
+
+ -- Stijn Veenman <veenman.stijn@gmail.com>  Tue, 22 Feb 2020 17:00:00 -0600
 openmediavault-drivemon (4.1.5) stable; urgency=low
 
   * Fixed bug in collectd config
